@@ -52,4 +52,14 @@ class QuantityMeasurementAppTest {
 
         assertFalse(q1.equals(null));
     }
+
+    @Test
+    void testEquality_FeetToCentimeters() {
+        var feet = new QuantityMeasurementApp.QuantityLength(1.0,
+                QuantityMeasurementApp.LengthUnit.FEET);
+        var cm = new QuantityMeasurementApp.QuantityLength(30.48,
+                QuantityMeasurementApp.LengthUnit.CENTIMETERS);
+
+        assertTrue(feet.equals(cm));
+    }
 }

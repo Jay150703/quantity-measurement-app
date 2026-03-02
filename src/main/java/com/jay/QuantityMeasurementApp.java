@@ -52,6 +52,11 @@ public class QuantityMeasurementApp {
             public double toFeet(double value) {
                 return value * 3.0;
             }
+        },
+        CENTIMETERS {
+            public double toFeet(double value) {
+                return value / 30.48;
+            }
         };
 
         public abstract double toFeet(double value);
