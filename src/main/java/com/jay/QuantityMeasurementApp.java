@@ -20,6 +20,23 @@ public class QuantityMeasurementApp {
             this.unit = unit;
         }
 
+        public QuantityLength add(QuantityLength other) {
+
+            if (other == null) {
+                throw new IllegalArgumentException("Second operand cannot be null");
+            }
+
+            double thisInFeet = this.toFeet();
+            double otherInFeet = other.toFeet();
+
+            double sumInFeet = thisInFeet + otherInFeet;
+
+            // Convert back to unit of first operand
+            double resultValue = this.unit.fromFeet(sumInFeet);
+
+            return new QuantityLength(resultValue, this.unit);
+        }
+
         private double toFeet() {
             return unit.toFeet(value);
         }
@@ -44,23 +61,40 @@ public class QuantityMeasurementApp {
             public double toFeet(double value) {
                 return value;
             }
+
+            public double fromFeet(double value) {
+                return value;
+            }
         },
         INCHES {
             public double toFeet(double value) {
                 return value / 12.0;
+            }
+
+            public double fromFeet(double value) {
+                return value * 12.0;
             }
         },
         YARDS {
             public double toFeet(double value) {
                 return value * 3.0;
             }
+
+            public double fromFeet(double value) {
+                return value / 3.0;
+            }
         },
         CENTIMETERS {
             public double toFeet(double value) {
                 return value / 30.48;
             }
+
+            public double fromFeet(double value) {
+                return value * 30.48;
+            }
         };
 
         public abstract double toFeet(double value);
+        public abstract double fromFeet(double value);
     }
 }

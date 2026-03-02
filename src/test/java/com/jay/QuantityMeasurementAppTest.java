@@ -62,4 +62,45 @@ class QuantityMeasurementAppTest {
 
         assertTrue(feet.equals(cm));
     }
+    @Test
+    void testAddition_SameUnit_FeetPlusFeet() {
+        var q1 = new QuantityMeasurementApp.QuantityLength(1.0,
+                QuantityMeasurementApp.LengthUnit.FEET);
+        var q2 = new QuantityMeasurementApp.QuantityLength(2.0,
+                QuantityMeasurementApp.LengthUnit.FEET);
+
+        var result = q1.add(q2);
+
+        assertEquals(
+                new QuantityMeasurementApp.QuantityLength(3.0,
+                        QuantityMeasurementApp.LengthUnit.FEET),
+                result
+        );
+    }
+
+    @Test
+    void testAddition_CrossUnit_FeetPlusInches() {
+        var feet = new QuantityMeasurementApp.QuantityLength(1.0,
+                QuantityMeasurementApp.LengthUnit.FEET);
+        var inches = new QuantityMeasurementApp.QuantityLength(12.0,
+                QuantityMeasurementApp.LengthUnit.INCHES);
+
+        var result = feet.add(inches);
+
+        assertEquals(
+                new QuantityMeasurementApp.QuantityLength(2.0,
+                        QuantityMeasurementApp.LengthUnit.FEET),
+                result
+        );
+    }
+
+    @Test
+    void testAddition_Commutativity() {
+        var feet = new QuantityMeasurementApp.QuantityLength(1.0,
+                QuantityMeasurementApp.LengthUnit.FEET);
+        var inches = new QuantityMeasurementApp.QuantityLength(12.0,
+                QuantityMeasurementApp.LengthUnit.INCHES);
+
+        assertEquals(feet.add(inches), inches.add(feet));
+    }
 }
