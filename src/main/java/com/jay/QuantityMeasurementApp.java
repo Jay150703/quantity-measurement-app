@@ -2,19 +2,24 @@ package com.jay;
 
 public class QuantityMeasurementApp {
 
-    public static class Feet {
+    public static class QuantityLength {
 
         private final double value;
+        private final LengthUnit unit;
 
-        public Feet(double value) {
+        public QuantityLength(double value, LengthUnit unit) {
             if (!Double.isFinite(value)) {
                 throw new IllegalArgumentException("Invalid numeric value");
             }
+            if (unit == null) {
+                throw new IllegalArgumentException("Unit cannot be null");
+            }
             this.value = value;
+            this.unit = unit;
         }
 
-        public double getValue() {
-            return value;
+        public double toFeet() {
+            return unit.toFeet(value);
         }
 
         @Override
@@ -22,13 +27,28 @@ public class QuantityMeasurementApp {
             if (this == obj) return true;
             if (obj == null || getClass() != obj.getClass()) return false;
 
-            Feet other = (Feet) obj;
-            return Double.compare(this.value, other.value) == 0;
+            QuantityLength other = (QuantityLength) obj;
+            return Double.compare(this.toFeet(), other.toFeet()) == 0;
         }
 
         @Override
         public int hashCode() {
-            return Double.hashCode(value);
+            return Double.hashCode(toFeet());
         }
+    }
+
+    public enum LengthUnit {
+        FEET {
+            public double toFeet(double value) {
+                return value;
+            }
+        },
+        INCHES {
+            public double toFeet(double value) {
+                return value / 12.0;
+            }
+        };
+
+        public abstract double toFeet(double value);
     }
 }
