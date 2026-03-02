@@ -4,6 +4,8 @@ public class QuantityMeasurementApp {
 
     public static class QuantityLength {
 
+        private static final double EPSILON = 0.0001;
+
         private final double value;
         private final LengthUnit unit;
 
@@ -28,12 +30,12 @@ public class QuantityMeasurementApp {
             if (obj == null || getClass() != obj.getClass()) return false;
 
             QuantityLength other = (QuantityLength) obj;
-            return Double.compare(this.toFeet(), other.toFeet()) == 0;
+            return Math.abs(this.toFeet() - other.toFeet()) < EPSILON;
         }
 
         @Override
         public int hashCode() {
-            return Double.hashCode(toFeet());
+            return Double.hashCode(Math.round(toFeet() / EPSILON));
         }
     }
 
