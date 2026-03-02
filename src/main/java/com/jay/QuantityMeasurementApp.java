@@ -2,99 +2,117 @@ package com.jay;
 
 public class QuantityMeasurementApp {
 
-    public static class QuantityLength {
+    public static final double EPSILON = 0.0001;
 
-        private static final double EPSILON = 0.0001;
+    private final double value;
+    private final LengthUnit unit;
 
-        private final double value;
-        private final LengthUnit unit;
+    /* =========================
+       Constructor
+       ========================= */
+    public QuantityMeasurementApp(double value, LengthUnit unit) {
 
-        public QuantityLength(double value, LengthUnit unit) {
-            if (!Double.isFinite(value)) {
-                throw new IllegalArgumentException("Invalid numeric value");
-            }
-            if (unit == null) {
-                throw new IllegalArgumentException("Unit cannot be null");
-            }
-            this.value = value;
-            this.unit = unit;
+        if (unit == null) {
+            throw new IllegalArgumentException("Unit cannot be null");
         }
 
-        public QuantityLength add(QuantityLength other) {
-
-            if (other == null) {
-                throw new IllegalArgumentException("Second operand cannot be null");
-            }
-
-            double thisInFeet = this.toFeet();
-            double otherInFeet = other.toFeet();
-
-            double sumInFeet = thisInFeet + otherInFeet;
-
-            // Convert back to unit of first operand
-            double resultValue = this.unit.fromFeet(sumInFeet);
-
-            return new QuantityLength(resultValue, this.unit);
+        if (!Double.isFinite(value)) {
+            throw new IllegalArgumentException("Invalid numeric value");
         }
 
-        private double toFeet() {
-            return unit.toFeet(value);
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (this == obj) return true;
-            if (obj == null || getClass() != obj.getClass()) return false;
-
-            QuantityLength other = (QuantityLength) obj;
-            return Math.abs(this.toFeet() - other.toFeet()) < EPSILON;
-        }
-
-        @Override
-        public int hashCode() {
-            return Double.hashCode(Math.round(toFeet() / EPSILON));
-        }
+        this.value = value;
+        this.unit = unit;
     }
 
-    public enum LengthUnit {
-        FEET {
-            public double toFeet(double value) {
-                return value;
-            }
+    public double getValue() {
+        return value;
+    }
 
-            public double fromFeet(double value) {
-                return value;
-            }
-        },
-        INCHES {
-            public double toFeet(double value) {
-                return value / 12.0;
-            }
+    public LengthUnit getUnit() {
+        return unit;
+    }
 
-            public double fromFeet(double value) {
-                return value * 12.0;
-            }
-        },
-        YARDS {
-            public double toFeet(double value) {
-                return value * 3.0;
-            }
+    /* =========================
+       UC5 – Equality (epsilon based)
+       ========================= */
+    @Override
+    public boolean equals(Object obj) {
 
-            public double fromFeet(double value) {
-                return value / 3.0;
-            }
-        },
-        CENTIMETERS {
-            public double toFeet(double value) {
-                return value / 30.48;
-            }
+        if (this == obj) return true;
+        if (!(obj instanceof QuantityMeasurementApp)) return false;
 
-            public double fromFeet(double value) {
-                return value * 30.48;
-            }
-        };
+        QuantityMeasurementApp other = (QuantityMeasurementApp) obj;
 
-        public abstract double toFeet(double value);
-        public abstract double fromFeet(double value);
+        double thisBase = this.unit.toBase(this.value);
+        double otherBase = other.unit.toBase(other.value);
+
+        return Math.abs(thisBase - otherBase) < EPSILON;
+    }
+
+    @Override
+    public int hashCode() {
+        double baseValue = unit.toBase(value);
+        return Double.hashCode(baseValue);
+    }
+
+    /* =========================
+       UC6 – Addition (implicit unit)
+       Result in first operand unit
+       ========================= */
+    public QuantityMeasurementApp add(QuantityMeasurementApp other) {
+        return add(other, this.unit);
+    }
+
+    /* =========================
+       UC7 – Addition (explicit target unit)
+       ========================= */
+    public QuantityMeasurementApp add(QuantityMeasurementApp other, LengthUnit targetUnit) {
+
+        if (other == null) {
+            throw new IllegalArgumentException("Second operand cannot be null");
+        }
+
+        if (targetUnit == null) {
+            throw new IllegalArgumentException("Target unit cannot be null");
+        }
+
+        double result = addInBaseAndConvert(other, targetUnit);
+
+        return new QuantityMeasurementApp(result, targetUnit);
+    }
+
+    /* =========================
+       Private Utility Method
+       (DRY principle)
+       ========================= */
+    private double addInBaseAndConvert(QuantityMeasurementApp other, LengthUnit targetUnit) {
+
+        double thisBase = this.unit.toBase(this.value);
+        double otherBase = other.unit.toBase(other.value);
+
+        double sumBase = thisBase + otherBase;
+
+        return targetUnit.fromBase(sumBase);
+    }
+
+    /* =========================
+       Convert to another unit
+       (UC5 compatibility)
+       ========================= */
+    public QuantityMeasurementApp convertTo(LengthUnit targetUnit) {
+
+        if (targetUnit == null) {
+            throw new IllegalArgumentException("Target unit cannot be null");
+        }
+
+        double baseValue = this.unit.toBase(this.value);
+        double converted = targetUnit.fromBase(baseValue);
+
+        return new QuantityMeasurementApp(converted, targetUnit);
+    }
+
+    @Override
+    public String toString() {
+        return "Quantity(" + value + ", " + unit + ")";
     }
 }
