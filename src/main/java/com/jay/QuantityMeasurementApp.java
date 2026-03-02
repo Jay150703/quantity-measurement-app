@@ -18,7 +18,7 @@ public class QuantityMeasurementApp {
             this.unit = unit;
         }
 
-        public double toFeet() {
+        private double toFeet() {
             return unit.toFeet(value);
         }
 
@@ -46,6 +46,11 @@ public class QuantityMeasurementApp {
         INCHES {
             public double toFeet(double value) {
                 return value / 12.0;
+            }
+        },
+        YARDS {
+            public double toFeet(double value) {
+                return value * 3.0;
             }
         };
 

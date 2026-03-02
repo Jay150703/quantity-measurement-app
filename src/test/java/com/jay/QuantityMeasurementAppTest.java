@@ -11,6 +11,7 @@ class QuantityMeasurementAppTest {
                 QuantityMeasurementApp.LengthUnit.FEET);
         var q2 = new QuantityMeasurementApp.QuantityLength(1.0,
                 QuantityMeasurementApp.LengthUnit.FEET);
+
         assertTrue(q1.equals(q2));
     }
 
@@ -20,7 +21,18 @@ class QuantityMeasurementAppTest {
                 QuantityMeasurementApp.LengthUnit.FEET);
         var inches = new QuantityMeasurementApp.QuantityLength(12.0,
                 QuantityMeasurementApp.LengthUnit.INCHES);
+
         assertTrue(feet.equals(inches));
+    }
+
+    @Test
+    void testEquality_YardsToFeet() {
+        var yards = new QuantityMeasurementApp.QuantityLength(1.0,
+                QuantityMeasurementApp.LengthUnit.YARDS);
+        var feet = new QuantityMeasurementApp.QuantityLength(3.0,
+                QuantityMeasurementApp.LengthUnit.FEET);
+
+        assertTrue(yards.equals(feet));
     }
 
     @Test
@@ -29,6 +41,15 @@ class QuantityMeasurementAppTest {
                 QuantityMeasurementApp.LengthUnit.FEET);
         var q2 = new QuantityMeasurementApp.QuantityLength(2.0,
                 QuantityMeasurementApp.LengthUnit.FEET);
+
         assertFalse(q1.equals(q2));
+    }
+
+    @Test
+    void testEquality_NullComparison() {
+        var q1 = new QuantityMeasurementApp.QuantityLength(1.0,
+                QuantityMeasurementApp.LengthUnit.FEET);
+
+        assertFalse(q1.equals(null));
     }
 }
