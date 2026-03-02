@@ -1,28 +1,34 @@
 package com.jay;
 
-public enum WeightUnit {
+public enum WeightUnit implements IMeasurable {
 
-    KILOGRAM(1.0),        // Base unit
-    GRAM(0.001),          // 1 g = 0.001 kg
-    POUND(0.453592);      // 1 lb ≈ 0.453592 kg
+    KILOGRAM(1.0),
+    GRAM(0.001),
+    POUND(0.453592);
 
-    private final double conversionFactorToBase;
+    private final double conversionFactor;
 
-    WeightUnit(double conversionFactorToBase) {
-        this.conversionFactorToBase = conversionFactorToBase;
+    WeightUnit(double conversionFactor) {
+        this.conversionFactor = conversionFactor;
     }
 
+    @Override
     public double getConversionFactor() {
-        return conversionFactorToBase;
+        return conversionFactor;
     }
 
-    // Convert this unit to base unit (kilogram)
+    @Override
     public double convertToBaseUnit(double value) {
-        return value * conversionFactorToBase;
+        return value * conversionFactor;
     }
 
-    // Convert from base unit (kilogram) to this unit
+    @Override
     public double convertFromBaseUnit(double baseValue) {
-        return baseValue / conversionFactorToBase;
+        return baseValue / conversionFactor;
+    }
+
+    @Override
+    public String getUnitName() {
+        return this.name();
     }
 }

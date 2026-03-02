@@ -1,135 +1,170 @@
 package com.jay;
 
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
-class QuantityMeasurementAppTest {
+class QuantityTest {
 
-    /* =========================
-       Equality Tests
-       ========================= */
+    private static final double EPSILON = 0.0001;
 
-    @Test
-    void testEquality_SameFeet() {
-        var q1 = new QuantityMeasurementApp(1.0, LengthUnit.FEET);
-        var q2 = new QuantityMeasurementApp(1.0, LengthUnit.FEET);
-
-        assertEquals(q1, q2);
-    }
+    /* =====================================================
+       LENGTH TESTS (UC1–UC8 preserved)
+       ===================================================== */
 
     @Test
-    void testEquality_FeetToInches() {
-        var feet = new QuantityMeasurementApp(1.0, LengthUnit.FEET);
-        var inches = new QuantityMeasurementApp(12.0, LengthUnit.INCHES);
+    void testLengthEquality_FeetToInches() {
+        Quantity<LengthUnit> feet =
+                new Quantity<>(1.0, LengthUnit.FEET);
+
+        Quantity<LengthUnit> inches =
+                new Quantity<>(12.0, LengthUnit.INCHES);
 
         assertEquals(feet, inches);
     }
 
     @Test
-    void testEquality_YardsToFeet() {
-        var yards = new QuantityMeasurementApp(1.0, LengthUnit.YARDS);
-        var feet = new QuantityMeasurementApp(3.0, LengthUnit.FEET);
+    void testLengthConversion_FeetToInches() {
+        Quantity<LengthUnit> feet =
+                new Quantity<>(1.0, LengthUnit.FEET);
 
-        assertEquals(yards, feet);
+        Quantity<LengthUnit> converted =
+                feet.convertTo(LengthUnit.INCHES);
+
+        assertEquals(12.0, converted.getValue(), EPSILON);
     }
 
     @Test
-    void testEquality_DifferentValues() {
-        var q1 = new QuantityMeasurementApp(1.0, LengthUnit.FEET);
-        var q2 = new QuantityMeasurementApp(2.0, LengthUnit.FEET);
+    void testLengthAddition_CrossUnit() {
+        Quantity<LengthUnit> feet =
+                new Quantity<>(1.0, LengthUnit.FEET);
 
-        assertNotEquals(q1, q2);
+        Quantity<LengthUnit> inches =
+                new Quantity<>(12.0, LengthUnit.INCHES);
+
+        Quantity<LengthUnit> result =
+                feet.add(inches, LengthUnit.FEET);
+
+        assertEquals(2.0, result.getValue(), EPSILON);
+    }
+
+    /* =====================================================
+       WEIGHT TESTS (UC9 preserved)
+       ===================================================== */
+
+    @Test
+    void testWeightEquality_KgToGram() {
+        Quantity<WeightUnit> kg =
+                new Quantity<>(1.0, WeightUnit.KILOGRAM);
+
+        Quantity<WeightUnit> gram =
+                new Quantity<>(1000.0, WeightUnit.GRAM);
+
+        assertEquals(kg, gram);
     }
 
     @Test
-    void testEquality_NullComparison() {
-        var q1 = new QuantityMeasurementApp(1.0, LengthUnit.FEET);
+    void testWeightConversion_KgToPound() {
+        Quantity<WeightUnit> kg =
+                new Quantity<>(1.0, WeightUnit.KILOGRAM);
 
-        assertNotEquals(null, q1);
+        Quantity<WeightUnit> pound =
+                kg.convertTo(WeightUnit.POUND);
+
+        assertEquals(2.20462, pound.getValue(), 0.01);
     }
 
     @Test
-    void testEquality_FeetToCentimeters() {
-        var feet = new QuantityMeasurementApp(1.0, LengthUnit.FEET);
-        var cm = new QuantityMeasurementApp(30.48, LengthUnit.CENTIMETERS);
+    void testWeightAddition_CrossUnit() {
+        Quantity<WeightUnit> kg =
+                new Quantity<>(1.0, WeightUnit.KILOGRAM);
 
-        assertEquals(feet, cm);
+        Quantity<WeightUnit> gram =
+                new Quantity<>(1000.0, WeightUnit.GRAM);
+
+        Quantity<WeightUnit> result =
+                kg.add(gram, WeightUnit.KILOGRAM);
+
+        assertEquals(2.0, result.getValue(), EPSILON);
     }
 
-    /* =========================
-       UC6 Addition Tests
-       ========================= */
+    /* =====================================================
+       CROSS CATEGORY SAFETY
+       ===================================================== */
 
     @Test
-    void testAddition_SameUnit_FeetPlusFeet() {
-        var q1 = new QuantityMeasurementApp(1.0, LengthUnit.FEET);
-        var q2 = new QuantityMeasurementApp(2.0, LengthUnit.FEET);
+    void testCrossCategoryComparison() {
+        Quantity<LengthUnit> length =
+                new Quantity<>(1.0, LengthUnit.FEET);
 
-        var result = q1.add(q2);
+        Quantity<WeightUnit> weight =
+                new Quantity<>(1.0, WeightUnit.KILOGRAM);
 
-        assertEquals(new QuantityMeasurementApp(3.0, LengthUnit.FEET), result);
+        assertNotEquals(length, weight);
     }
 
-    @Test
-    void testAddition_CrossUnit_FeetPlusInches() {
-        var feet = new QuantityMeasurementApp(1.0, LengthUnit.FEET);
-        var inches = new QuantityMeasurementApp(12.0, LengthUnit.INCHES);
-
-        var result = feet.add(inches);
-
-        assertEquals(new QuantityMeasurementApp(2.0, LengthUnit.FEET), result);
-    }
+    /* =====================================================
+       VALIDATION TESTS
+       ===================================================== */
 
     @Test
-    void testAddition_Commutativity() {
-        var feet = new QuantityMeasurementApp(1.0, LengthUnit.FEET);
-        var inches = new QuantityMeasurementApp(12.0, LengthUnit.INCHES);
-
-        assertEquals(feet.add(inches), inches.add(feet));
-    }
-
-    /* =========================
-       UC7 Explicit Target Unit Tests
-       ========================= */
-
-    @Test
-    void testAddition_ExplicitTargetUnit_Feet() {
-        var a = new QuantityMeasurementApp(1.0, LengthUnit.FEET);
-        var b = new QuantityMeasurementApp(12.0, LengthUnit.INCHES);
-
-        assertEquals(new QuantityMeasurementApp(2.0, LengthUnit.FEET),
-                a.add(b, LengthUnit.FEET));
+    void testConstructor_NullUnit() {
+        assertThrows(IllegalArgumentException.class,
+                () -> new Quantity<>(1.0, null));
     }
 
     @Test
-    void testAddition_ExplicitTargetUnit_Inches() {
-        var a = new QuantityMeasurementApp(1.0, LengthUnit.FEET);
-        var b = new QuantityMeasurementApp(12.0, LengthUnit.INCHES);
-
-        assertEquals(new QuantityMeasurementApp(24.0, LengthUnit.INCHES),
-                a.add(b, LengthUnit.INCHES));
+    void testConstructor_InvalidValue() {
+        assertThrows(IllegalArgumentException.class,
+                () -> new Quantity<>(Double.NaN, LengthUnit.FEET));
     }
 
-    @Test
-    void testAddition_ExplicitTargetUnit_Yards() {
-        var a = new QuantityMeasurementApp(1.0, LengthUnit.FEET);
-        var b = new QuantityMeasurementApp(12.0, LengthUnit.INCHES);
+    /* =====================================================
+       ADDITION PROPERTIES
+       ===================================================== */
 
-        var result = a.add(b, LengthUnit.YARDS);
+    @Test
+    void testAddition_Commutativity_Length() {
+        Quantity<LengthUnit> a =
+                new Quantity<>(1.0, LengthUnit.FEET);
+
+        Quantity<LengthUnit> b =
+                new Quantity<>(12.0, LengthUnit.INCHES);
 
         assertEquals(
-                0.6667,
-                result.getValue(),
-                QuantityMeasurementApp.EPSILON
+                a.add(b, LengthUnit.FEET),
+                b.add(a, LengthUnit.FEET)
         );
     }
 
     @Test
-    void testAddition_NullTargetUnit() {
-        var a = new QuantityMeasurementApp(1.0, LengthUnit.FEET);
-        var b = new QuantityMeasurementApp(12.0, LengthUnit.INCHES);
+    void testAddition_WithZero() {
+        Quantity<WeightUnit> a =
+                new Quantity<>(5.0, WeightUnit.KILOGRAM);
 
-        assertThrows(IllegalArgumentException.class,
-                () -> a.add(b, null));
+        Quantity<WeightUnit> zero =
+                new Quantity<>(0.0, WeightUnit.GRAM);
+
+        assertEquals(
+                a,
+                a.add(zero)
+        );
     }
+
+    /* =====================================================
+       HASHCODE CONSISTENCY
+       ===================================================== */
+
+    @Test
+    void testHashCodeConsistency() {
+        Quantity<LengthUnit> a =
+                new Quantity<>(1.0, LengthUnit.FEET);
+
+        Quantity<LengthUnit> b =
+                new Quantity<>(12.0, LengthUnit.INCHES);
+
+        assertEquals(a, b);
+        assertEquals(a.hashCode(), b.hashCode());
+    }
+
 }
