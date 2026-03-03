@@ -166,5 +166,76 @@ class QuantityTest {
         assertEquals(a, b);
         assertEquals(a.hashCode(), b.hashCode());
     }
+    // =====================
+// UC11 - Volume Tests
+// =====================
+
+    @Test
+    void testEquality_LitreToMillilitre() {
+        var litre = new Quantity<>(1.0, VolumeUnit.LITRE);
+        var ml = new Quantity<>(1000.0, VolumeUnit.MILLILITRE);
+
+        assertEquals(litre, ml);
+    }
+
+    @Test
+    void testEquality_LitreToGallon() {
+        var litre = new Quantity<>(3.78541, VolumeUnit.LITRE);
+        var gallon = new Quantity<>(1.0, VolumeUnit.GALLON);
+
+        assertEquals(litre, gallon);
+    }
+
+    @Test
+    void testConversion_LitreToMillilitre() {
+        var litre = new Quantity<>(1.0, VolumeUnit.LITRE);
+        var converted = litre.convertTo(VolumeUnit.MILLILITRE);
+
+        assertEquals(new Quantity<>(1000.0, VolumeUnit.MILLILITRE), converted);
+    }
+
+    @Test
+    void testConversion_GallonToLitre() {
+        var gallon = new Quantity<>(1.0, VolumeUnit.GALLON);
+        var litre = gallon.convertTo(VolumeUnit.LITRE);
+
+        assertEquals(new Quantity<>(3.78541, VolumeUnit.LITRE), litre);
+    }
+
+    @Test
+    void testAddition_LitrePlusMillilitre() {
+        var litre = new Quantity<>(1.0, VolumeUnit.LITRE);
+        var ml = new Quantity<>(1000.0, VolumeUnit.MILLILITRE);
+
+        var result = litre.add(ml);
+
+        assertEquals(new Quantity<>(2.0, VolumeUnit.LITRE), result);
+    }
+
+    @Test
+    void testAddition_ExplicitTargetUnit_Gallon() {
+        var litre = new Quantity<>(3.78541, VolumeUnit.LITRE);
+        var litre2 = new Quantity<>(3.78541, VolumeUnit.LITRE);
+
+        var result = litre.add(litre2, VolumeUnit.GALLON);
+
+        assertEquals(new Quantity<>(2.0, VolumeUnit.GALLON), result);
+    }
+
+    @Test
+    void testVolumeVsLength_Incompatible() {
+        var volume = new Quantity<>(1.0, VolumeUnit.LITRE);
+        var length = new Quantity<>(1.0, LengthUnit.FEET);
+
+        assertNotEquals(volume, length);
+    }
+
+    @Test
+    void testVolumeVsWeight_Incompatible() {
+        var volume = new Quantity<>(1.0, VolumeUnit.LITRE);
+        var weight = new Quantity<>(1.0, WeightUnit.KILOGRAM);
+
+        assertNotEquals(volume, weight);
+    }
 
 }
