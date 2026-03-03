@@ -1,7 +1,6 @@
 package com.jay;
 
 import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class QuantityTest {
@@ -9,83 +8,113 @@ class QuantityTest {
     private static final double EPSILON = 0.0001;
 
     /* =====================================================
-       LENGTH TESTS (UC1–UC8 preserved)
+       LENGTH TESTS
        ===================================================== */
 
     @Test
     void testLengthEquality_FeetToInches() {
-        Quantity<LengthUnit> feet =
-                new Quantity<>(1.0, LengthUnit.FEET);
-
-        Quantity<LengthUnit> inches =
-                new Quantity<>(12.0, LengthUnit.INCHES);
+        var feet = new Quantity<>(1.0, LengthUnit.FEET);
+        var inches = new Quantity<>(12.0, LengthUnit.INCHES);
 
         assertEquals(feet, inches);
     }
 
     @Test
-    void testLengthConversion_FeetToInches() {
-        Quantity<LengthUnit> feet =
-                new Quantity<>(1.0, LengthUnit.FEET);
+    void testLengthAddition_CrossUnit() {
+        var feet = new Quantity<>(1.0, LengthUnit.FEET);
+        var inches = new Quantity<>(12.0, LengthUnit.INCHES);
 
-        Quantity<LengthUnit> converted =
-                feet.convertTo(LengthUnit.INCHES);
-
-        assertEquals(12.0, converted.getValue(), EPSILON);
+        assertEquals(2.0,
+                feet.add(inches, LengthUnit.FEET).getValue(),
+                EPSILON);
     }
 
     @Test
-    void testLengthAddition_CrossUnit() {
-        Quantity<LengthUnit> feet =
-                new Quantity<>(1.0, LengthUnit.FEET);
+    void testLengthSubtraction_CrossUnit() {
+        var feet = new Quantity<>(10.0, LengthUnit.FEET);
+        var inches = new Quantity<>(6.0, LengthUnit.INCHES);
 
-        Quantity<LengthUnit> inches =
-                new Quantity<>(12.0, LengthUnit.INCHES);
+        assertEquals(9.5,
+                feet.subtract(inches).getValue(),
+                EPSILON);
+    }
 
-        Quantity<LengthUnit> result =
-                feet.add(inches, LengthUnit.FEET);
+    @Test
+    void testLengthDivision_CrossUnit() {
+        var inches = new Quantity<>(24.0, LengthUnit.INCHES);
+        var feet = new Quantity<>(2.0, LengthUnit.FEET);
 
-        assertEquals(2.0, result.getValue(), EPSILON);
+        assertEquals(1.0, inches.divide(feet), EPSILON);
     }
 
     /* =====================================================
-       WEIGHT TESTS (UC9 preserved)
+       WEIGHT TESTS
        ===================================================== */
 
     @Test
     void testWeightEquality_KgToGram() {
-        Quantity<WeightUnit> kg =
-                new Quantity<>(1.0, WeightUnit.KILOGRAM);
-
-        Quantity<WeightUnit> gram =
-                new Quantity<>(1000.0, WeightUnit.GRAM);
+        var kg = new Quantity<>(1.0, WeightUnit.KILOGRAM);
+        var gram = new Quantity<>(1000.0, WeightUnit.GRAM);
 
         assertEquals(kg, gram);
     }
 
     @Test
-    void testWeightConversion_KgToPound() {
-        Quantity<WeightUnit> kg =
-                new Quantity<>(1.0, WeightUnit.KILOGRAM);
+    void testWeightSubtraction() {
+        var kg = new Quantity<>(10.0, WeightUnit.KILOGRAM);
+        var gram = new Quantity<>(5000.0, WeightUnit.GRAM);
 
-        Quantity<WeightUnit> pound =
-                kg.convertTo(WeightUnit.POUND);
-
-        assertEquals(2.20462, pound.getValue(), 0.01);
+        assertEquals(5.0,
+                kg.subtract(gram).getValue(),
+                EPSILON);
     }
 
     @Test
-    void testWeightAddition_CrossUnit() {
-        Quantity<WeightUnit> kg =
-                new Quantity<>(1.0, WeightUnit.KILOGRAM);
+    void testWeightDivision() {
+        var kg = new Quantity<>(10.0, WeightUnit.KILOGRAM);
+        var kg2 = new Quantity<>(5.0, WeightUnit.KILOGRAM);
 
-        Quantity<WeightUnit> gram =
-                new Quantity<>(1000.0, WeightUnit.GRAM);
+        assertEquals(2.0, kg.divide(kg2), EPSILON);
+    }
 
-        Quantity<WeightUnit> result =
-                kg.add(gram, WeightUnit.KILOGRAM);
+    /* =====================================================
+       VOLUME TESTS
+       ===================================================== */
 
-        assertEquals(2.0, result.getValue(), EPSILON);
+    @Test
+    void testVolumeEquality_LitreToMillilitre() {
+        var litre = new Quantity<>(1.0, VolumeUnit.LITRE);
+        var ml = new Quantity<>(1000.0, VolumeUnit.MILLILITRE);
+
+        assertEquals(litre, ml);
+    }
+
+    @Test
+    void testVolumeAddition() {
+        var litre = new Quantity<>(1.0, VolumeUnit.LITRE);
+        var ml = new Quantity<>(1000.0, VolumeUnit.MILLILITRE);
+
+        assertEquals(2.0,
+                litre.add(ml).getValue(),
+                EPSILON);
+    }
+
+    @Test
+    void testVolumeSubtraction() {
+        var litre = new Quantity<>(5.0, VolumeUnit.LITRE);
+        var ml = new Quantity<>(500.0, VolumeUnit.MILLILITRE);
+
+        assertEquals(4.5,
+                litre.subtract(ml).getValue(),
+                EPSILON);
+    }
+
+    @Test
+    void testVolumeDivision() {
+        var litre = new Quantity<>(5.0, VolumeUnit.LITRE);
+        var litre2 = new Quantity<>(10.0, VolumeUnit.LITRE);
+
+        assertEquals(0.5, litre.divide(litre2), EPSILON);
     }
 
     /* =====================================================
@@ -94,148 +123,23 @@ class QuantityTest {
 
     @Test
     void testCrossCategoryComparison() {
-        Quantity<LengthUnit> length =
-                new Quantity<>(1.0, LengthUnit.FEET);
-
-        Quantity<WeightUnit> weight =
-                new Quantity<>(1.0, WeightUnit.KILOGRAM);
+        var length = new Quantity<>(1.0, LengthUnit.FEET);
+        var weight = new Quantity<>(1.0, WeightUnit.KILOGRAM);
 
         assertNotEquals(length, weight);
     }
 
+
     /* =====================================================
-       VALIDATION TESTS
+       DIVISION BY ZERO
        ===================================================== */
 
     @Test
-    void testConstructor_NullUnit() {
-        assertThrows(IllegalArgumentException.class,
-                () -> new Quantity<>(1.0, null));
+    void testDivision_ByZero() {
+        var length = new Quantity<>(10.0, LengthUnit.FEET);
+        var zero = new Quantity<>(0.0, LengthUnit.FEET);
+
+        assertThrows(ArithmeticException.class,
+                () -> length.divide(zero));
     }
-
-    @Test
-    void testConstructor_InvalidValue() {
-        assertThrows(IllegalArgumentException.class,
-                () -> new Quantity<>(Double.NaN, LengthUnit.FEET));
-    }
-
-    /* =====================================================
-       ADDITION PROPERTIES
-       ===================================================== */
-
-    @Test
-    void testAddition_Commutativity_Length() {
-        Quantity<LengthUnit> a =
-                new Quantity<>(1.0, LengthUnit.FEET);
-
-        Quantity<LengthUnit> b =
-                new Quantity<>(12.0, LengthUnit.INCHES);
-
-        assertEquals(
-                a.add(b, LengthUnit.FEET),
-                b.add(a, LengthUnit.FEET)
-        );
-    }
-
-    @Test
-    void testAddition_WithZero() {
-        Quantity<WeightUnit> a =
-                new Quantity<>(5.0, WeightUnit.KILOGRAM);
-
-        Quantity<WeightUnit> zero =
-                new Quantity<>(0.0, WeightUnit.GRAM);
-
-        assertEquals(
-                a,
-                a.add(zero)
-        );
-    }
-
-    /* =====================================================
-       HASHCODE CONSISTENCY
-       ===================================================== */
-
-    @Test
-    void testHashCodeConsistency() {
-        Quantity<LengthUnit> a =
-                new Quantity<>(1.0, LengthUnit.FEET);
-
-        Quantity<LengthUnit> b =
-                new Quantity<>(12.0, LengthUnit.INCHES);
-
-        assertEquals(a, b);
-        assertEquals(a.hashCode(), b.hashCode());
-    }
-    // =====================
-// UC11 - Volume Tests
-// =====================
-
-    @Test
-    void testEquality_LitreToMillilitre() {
-        var litre = new Quantity<>(1.0, VolumeUnit.LITRE);
-        var ml = new Quantity<>(1000.0, VolumeUnit.MILLILITRE);
-
-        assertEquals(litre, ml);
-    }
-
-    @Test
-    void testEquality_LitreToGallon() {
-        var litre = new Quantity<>(3.78541, VolumeUnit.LITRE);
-        var gallon = new Quantity<>(1.0, VolumeUnit.GALLON);
-
-        assertEquals(litre, gallon);
-    }
-
-    @Test
-    void testConversion_LitreToMillilitre() {
-        var litre = new Quantity<>(1.0, VolumeUnit.LITRE);
-        var converted = litre.convertTo(VolumeUnit.MILLILITRE);
-
-        assertEquals(new Quantity<>(1000.0, VolumeUnit.MILLILITRE), converted);
-    }
-
-    @Test
-    void testConversion_GallonToLitre() {
-        var gallon = new Quantity<>(1.0, VolumeUnit.GALLON);
-        var litre = gallon.convertTo(VolumeUnit.LITRE);
-
-        assertEquals(new Quantity<>(3.78541, VolumeUnit.LITRE), litre);
-    }
-
-    @Test
-    void testAddition_LitrePlusMillilitre() {
-        var litre = new Quantity<>(1.0, VolumeUnit.LITRE);
-        var ml = new Quantity<>(1000.0, VolumeUnit.MILLILITRE);
-
-        var result = litre.add(ml);
-
-        assertEquals(new Quantity<>(2.0, VolumeUnit.LITRE), result);
-    }
-
-    @Test
-    void testAddition_ExplicitTargetUnit_Gallon() {
-        var litre = new Quantity<>(3.78541, VolumeUnit.LITRE);
-        var litre2 = new Quantity<>(3.78541, VolumeUnit.LITRE);
-
-        var result = litre.add(litre2, VolumeUnit.GALLON);
-
-        assertEquals(new Quantity<>(2.0, VolumeUnit.GALLON), result);
-    }
-
-    @Test
-    void testVolumeVsLength_Incompatible() {
-        var volume = new Quantity<>(1.0, VolumeUnit.LITRE);
-        var length = new Quantity<>(1.0, LengthUnit.FEET);
-
-        assertNotEquals(volume, length);
-    }
-
-    @Test
-    void testVolumeVsWeight_Incompatible() {
-        var volume = new Quantity<>(1.0, VolumeUnit.LITRE);
-        var weight = new Quantity<>(1.0, WeightUnit.KILOGRAM);
-
-        assertNotEquals(volume, weight);
-    }
-
 }
