@@ -16,17 +16,21 @@ public class QuantityMeasurementEntity {
 
     public QuantityMeasurementEntity(String operation, String errorMessage) {
         this.operation = operation;
-        this.result = 0;
+        this.result = 0.0;
         this.isError = true;
         this.errorMessage = errorMessage;
     }
 
-    public boolean isError() {
-        return isError;
+    public String getOperation() {
+        return operation;
     }
 
     public double getResult() {
         return result;
+    }
+
+    public boolean isError() {
+        return isError;
     }
 
     public String getErrorMessage() {

@@ -3,13 +3,14 @@ package com.jay;
 import com.jay.controller.QuantityMeasurementController;
 import com.jay.dto.QuantityDTO;
 import com.jay.repository.QuantityMeasurementCacheRepository;
+import com.jay.repository.QuantityMeasurementDatabaseRepository;
 import com.jay.service.QuantityMeasurementServiceImpl;
 
 public class QuantityMeasurementApp {
 
     public static void main(String[] args) {
 
-        var repo = QuantityMeasurementCacheRepository.getInstance();
+        var repo = new QuantityMeasurementDatabaseRepository();
         var service = new QuantityMeasurementServiceImpl(repo);
         var controller = new QuantityMeasurementController(service);
 
