@@ -1,67 +1,22 @@
-Quantity Measurement Application
+📏 Quantity Measurement Microservices Application
+Spring Boot 3.x + Spring Cloud | Java 17
+🚀 Overview
 
-A Spring Boot + Spring Cloud based microservices application for performing quantity measurement operations such as conversion, comparison, arithmetic operations, and operation history tracking.
+This project is a Spring Cloud based microservices application designed to perform various quantity measurement operations such as:
 
-🚀 Features
-Quantity Measurement Operations
 Quantity Conversion
 Quantity Comparison
-Addition of Quantities
-Multiple Measurement Types:
-Weight
-Length
-Volume
-Temperature
-🔐 Security Features
-Spring Security
-JWT Authentication
-Protected APIs
-User Registration & Login
-BCrypt Password Encoding
-🏗️ Microservices Architecture
+Arithmetic Operations on Quantities
+Operation History Tracking
+Error History Management
 
-The application has been migrated from a monolithic Spring Boot application into a Spring Cloud microservices architecture.
+The application was initially developed as a monolithic Spring Boot application and later migrated into a modular microservices architecture using Spring Cloud technologies.
 
-Services
-Eureka Server → Service Discovery
-API Gateway → Centralized Routing
-Measurement Service → Quantity APIs & Business Logic
-User Service → User-related APIs
-🛠️ Tech Stack
-Backend
-Java 17
-Spring Boot
-Spring Security
-Spring Cloud
-Spring Cloud Gateway
-Eureka Discovery Server
-Spring Data JPA
-Hibernate
-H2 Database
-Maven
-Documentation
-Swagger / OpenAPI
-Authentication
-JWT (JSON Web Token)
-📂 Project Structure
-quantity-measurement-app/
-│
-├── measurement-service/
-│
-├── eureka-server/
-│
-├── api-gateway/
-│
-├── user-service/
-│
-└── pom.xml
-⚙️ Microservices Ports
-Service	Port
-Eureka Server	8761
-API Gateway	8080
-Measurement Service	8081
-User Service	8082
-🔄 Architecture Flow
+🏗️ System Architecture
+
+The system follows a microservices-based architecture, where each service is independently deployable and registered through a centralized discovery server.
+
+Architecture Flow
 Client
    ↓
 API Gateway :8080
@@ -73,8 +28,61 @@ JWT Security + JPA
 H2 Database
 
 All services registered in Eureka :8761
-📖 Swagger Documentation
-Measurement Service Swagger
+⚙️ Core Infrastructure Services
+Component	Port	Technology	Responsibility
+API Gateway	8080	Spring Cloud Gateway	Centralized routing & request forwarding
+Eureka Server	8761	Netflix Eureka	Service discovery & registration
+🧩 Microservices Overview
+#	Service	Port	Database	Responsibility
+1	Measurement Service	8081	H2	Quantity operations, JWT security, history tracking
+2	User Service	8082	In-Memory	User-related APIs
+📌 Supported Measurement Types
+
+The system currently supports:
+
+Weight Measurement
+Length Measurement
+Volume Measurement
+Temperature Measurement
+🔐 Security Features
+Spring Security
+JWT Authentication
+Protected REST APIs
+User Registration & Login
+BCrypt Password Encoding
+Role-Based Authorization
+🛠️ Technologies Used
+Backend
+Java 17
+Spring Boot 3.x
+Spring Cloud
+Spring Security
+Spring Cloud Gateway
+Netflix Eureka
+Spring Data JPA
+Hibernate
+Database
+H2 Database
+Documentation
+Swagger / OpenAPI
+Build Tool
+Maven
+📂 Project Structure
+quantity-measurement-app/
+│
+├── measurement-service/
+│
+├── eureka-server/
+│
+├── api-gateway/
+│
+├── user-service/
+│
+├── pom.xml
+│
+└── README.md
+📖 API Documentation
+Swagger UI
 http://localhost:8081/swagger-ui/index.html
 Eureka Dashboard
 http://localhost:8761
@@ -95,35 +103,42 @@ Sample Request
   "email": "jayanthi@gmail.com",
   "password": "Password123"
 }
-📌 Quantity APIs
-Convert Quantities
-POST /api/v1/quantities/convert
-Compare Quantities
-POST /api/v1/quantities/compare
-Add Quantities
-POST /api/v1/quantities/add
-Operation History
-GET /api/v1/quantities/history/operation/{operation}
-Errored Operations
-GET /api/v1/quantities/history/errored
-Operation Count
-GET /api/v1/quantities/count/{operation}
+📌 Quantity Measurement APIs
+Method	Endpoint	Description
+POST	/api/v1/quantities/convert	Convert quantities
+POST	/api/v1/quantities/compare	Compare quantities
+POST	/api/v1/quantities/add	Add quantities
+GET	/api/v1/quantities/history/operation/{operation}	Get operation history
+GET	/api/v1/quantities/history/errored	Get errored operations
+GET	/api/v1/quantities/count/{operation}	Get operation count
 ✅ Implemented Use Cases
 UC	Description	Status
 UC17	REST APIs + JPA + Swagger + Validation	✅
 UC18	Spring Security + JWT Authentication	✅
 UC19	Spring Cloud Microservices Migration	✅
+🎯 Key Features
+Microservices-based architecture
+Multi-module Maven project structure
+Service discovery using Eureka
+Centralized API routing
+JWT-secured APIs
+Swagger documentation
+Operation history tracking
+Modular and scalable backend design
 📌 Future Enhancements
-Config Server
+Spring Cloud Config Server
 Dockerization
 Kubernetes Deployment
-MySQL/PostgreSQL
-OpenFeign
-Kafka / RabbitMQ
+MySQL/PostgreSQL Integration
+OpenFeign Communication
+Kafka/RabbitMQ Messaging
 Distributed Tracing
 CI/CD Integration
 👩‍💻 Author
 
 Jayanthi M
-MCA - Generative AI Specialization
-Spring Boot | Microservices | AI & ML Enthusiast
+Backend Developer | Java | Spring Boot | Microservices | AI & ML Enthusiast
+
+⭐ Final Note
+
+This project demonstrates the migration of a traditional Spring Boot monolithic application into a scalable Spring Cloud microservices architecture using industry-standard backend technologies and best practices.
