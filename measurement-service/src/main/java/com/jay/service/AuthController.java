@@ -1,4 +1,4 @@
-package com.jay.controller;
+package com.jay.service;
 
 import com.jay.dto.AuthRequest;
 import com.jay.dto.AuthResponse;
