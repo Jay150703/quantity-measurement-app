@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 @RestController
 @RequestMapping("/api/v1/quantities")
@@ -18,6 +19,7 @@ import java.util.List;
         name = "Quantity Measurement Controller",
         description = "APIs for quantity measurement operations"
 )
+@SecurityRequirement(name = "bearerAuth")
 public class QuantityMeasurementController {
 
     private final IQuantityMeasurementService service;
