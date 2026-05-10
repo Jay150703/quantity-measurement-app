@@ -1,6 +1,6 @@
 package com.jay.repository;
 
-import com.jay.entity.QuantityMeasurementEntity;
+import com.jay.model.QuantityMeasurementEntity;
 
 import java.util.ArrayList;
 import java.util.List;
