@@ -1,5 +1,7 @@
-#Quantity Measurement App
+## Quantity Measurement App
+
 Overview
+
 The Quantity Measurement App is a use-case-driven application built using Core Java and Maven.
 
 This project is designed to implement quantity measurement operations step by step, following:
